@@ -11,7 +11,7 @@ namespace Misa.Amis.Api.Controllers
   /// Base controller
   /// </summary>
   /// <typeparam name="T">Entity type</typeparam>
-  /// Created by: nvchung - 11/02/2022
+  /// Created by: nvchung (11/02/2022)
   public class BaseController<T> : ControllerBase where T : BaseEntity
   {
     #region Fields
@@ -34,6 +34,7 @@ namespace Misa.Amis.Api.Controllers
     /// <param name="id">Khóa chính</param>
     /// <returns></returns>
     /// <exception cref="ResourceNotFoundException"></exception>
+    /// Created by: nvchung (11/02/2022)
     protected T GetOrThrow(Guid id)
     {
       var entity = Repo.GetById(id);
@@ -47,6 +48,7 @@ namespace Misa.Amis.Api.Controllers
     /// Lây tất cả bản ghi
     /// </summary>
     /// <returns></returns>
+    /// Created by: nvchung (11/02/2022)
     [HttpGet]
     public IActionResult GetAll()
     {
@@ -57,6 +59,7 @@ namespace Misa.Amis.Api.Controllers
     /// </summary>
     /// <param name="id">Khóa chính</param>
     /// <returns></returns>
+    /// Created by: nvchung (11/02/2022)
     [HttpGet("{id}")]
     public IActionResult GetById(Guid id)
     {
@@ -68,6 +71,7 @@ namespace Misa.Amis.Api.Controllers
     /// </summary>
     /// <param name="entity">Dữ liệu tạo mới</param>
     /// <returns>Số bản ghi được tạo</returns>
+    /// Created by: nvchung (11/02/2022)
     [HttpPost]
     public IActionResult Create(T entity)
     {
@@ -79,6 +83,7 @@ namespace Misa.Amis.Api.Controllers
     /// <param name="id">Khóa chính</param>
     /// <param name="entity">Dữ liệu cập nhật</param>
     /// <returns>Số bản ghi được cập nhật</returns>
+    /// Created by: nvchung (11/02/2022)
     [HttpPut("{id}")]
     public IActionResult Update(Guid id, T entity)
     {
@@ -90,6 +95,7 @@ namespace Misa.Amis.Api.Controllers
     /// </summary>
     /// <param name="id">Khóa chính</param>
     /// <returns>Số bản ghi bị xóa</returns>
+    /// Created by: nvchung (11/02/2022)
     [HttpDelete("{id}")]
     public IActionResult Delete(Guid id)
     {

@@ -4,7 +4,11 @@
 		@click="$emit('click')"
 	></div>
 </template>
+
 <script>
+/**
+ * @author Createdby: nvchung (16/02/2022)
+ */
 export default {
 	emits: ["click"],
 	props: {

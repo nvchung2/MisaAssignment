@@ -5,6 +5,9 @@ using MySqlConnector;
 
 namespace Misa.Amis.Infrastructure.Repositories
 {
+  /// <summary>
+  /// Created by: nvchung (11/02/2022)
+  /// </summary>
   public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository
   {
     public EmployeeRepository(Func<MySqlConnection> getConnection) : base(getConnection)
@@ -14,6 +17,7 @@ namespace Misa.Amis.Infrastructure.Repositories
     /// <summary>
     /// Phân trang và tìm kiếm theo mã, họ tên, số điện thoại
     /// </summary>
+    /// Created by: nvchung (11/02/2022)
     public Page<Employee> GetPaged(int pageNumber, int pageSize, string? search = null)
     {
       var parameters = new DynamicParameters(new { pageNumber, pageSize });
@@ -26,6 +30,7 @@ namespace Misa.Amis.Infrastructure.Repositories
       }
       return GetPaged(pageSize, pageNumber, condition, parameters);
     }
+    //Created by: nvchung (11/02/2022)
     public string GetNextEmployeeCode()
     {
       //lệnh truy vấn mã nhân viên lớn nhất
@@ -35,6 +40,7 @@ namespace Misa.Amis.Infrastructure.Repositories
       var nextIndex = db.QueryFirstOrDefault<int>(sql) + 1;
       return "NV-" + nextIndex;
     }
+    //Created by: nvchung (11/02/2022)
     public int BulkDelete(IEnumerable<Guid> ids)
     {
       var sql = "delete from Employee where EmployeeId in @ids";

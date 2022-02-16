@@ -7,6 +7,7 @@ namespace Misa.Amis.Core.Interfaces.Services
   /// Interface service base
   /// </summary>
   /// <typeparam name="T">Entity type</typeparam>
+  /// Created by: nvchung (11/02/2022)
   public interface IBaseService<T> where T : BaseEntity
   {
     /// <summary>

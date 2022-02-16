@@ -79,6 +79,10 @@
 import MList from "./List/MList.vue";
 import MListItem from "./List/MListItem.vue";
 import MIcon from "./MIcon.vue";
+
+/**
+ * @author Createdby: nvchung (16/02/2022)
+ */
 export default {
 	components: { MList, MListItem, MIcon },
 	props: {

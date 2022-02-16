@@ -2,6 +2,8 @@
 
 namespace Misa.Amis.Core.Interfaces.Repositories
 {
+  /// Created by: nvchung (11/02/2022)
+  /// <typeparam name="T"></typeparam>
   public interface IPageableRepository<T> where T : BaseEntity
   {
     /// <summary>

@@ -18,6 +18,7 @@ namespace Misa.Amis.Core.Services
     #endregion
 
     #region Methods
+    //Created by: nvchung (11/02/2022)
     protected override void Validate(Department entity, bool isUpdate)
     {
       //kiểm tra hợp lệ mã đơn vị

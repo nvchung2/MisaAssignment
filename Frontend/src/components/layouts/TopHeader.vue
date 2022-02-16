@@ -14,6 +14,9 @@
 </template>
 <script>
 import MIcon from "../bases/MIcon.vue";
+/**
+ * @author Createdby: nvchung (16/02/2022)
+ */
 export default {
 	components: {
 		MIcon,

@@ -7,6 +7,9 @@
 	</label>
 </template>
 <script>
+/**
+ * @author Createdby: nvchung (16/02/2022)
+ */
 export default {
 	inheritAttrs: false,
 	props: {

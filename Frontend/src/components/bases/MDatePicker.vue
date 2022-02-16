@@ -38,6 +38,10 @@ import DatePicker from "vue3-date-time-picker";
 import MIcon from "./MIcon.vue";
 import dayjs from "dayjs";
 import { DateFormat } from "../../utils/formatter";
+
+/**
+ * @author Createdby: nvchung (16/02/2022)
+ */
 export default {
 	inheritAttrs: false,
 	components: {

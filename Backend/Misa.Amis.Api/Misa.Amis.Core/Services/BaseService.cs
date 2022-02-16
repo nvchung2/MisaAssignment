@@ -42,6 +42,7 @@ namespace Misa.Amis.Core.Services
     /// </summary>
     /// <param name="entity"></param>
     /// <exception cref="ValidationException"></exception>
+    /// Created by: nvchung (11/02/2022)
     private void CommonValidate(T entity)
     {
       foreach (var prop in typeof(T).GetProperties())//duyệt qua các props
@@ -57,6 +58,7 @@ namespace Misa.Amis.Core.Services
         }
       }
     }
+    //Created by: nvchung (11/02/2022)
     public int Insert(T entity)
     {
       //thực hiện validate
@@ -65,7 +67,7 @@ namespace Misa.Amis.Core.Services
       //insert
       return Repo.Insert(entity);
     }
-
+    //Created by: nvchung (11/02/2022)
     public int Update(Guid id, T entity)
     {
       GetPrimaryKeyProperty<T>().SetValue(entity, id);//set value cho khóa chính
@@ -75,7 +77,7 @@ namespace Misa.Amis.Core.Services
       //update
       return Repo.Update(id, entity);
     }
-
+    //Created by: nvchung (11/02/2022)
     public ExcelPackage ExportExcel(ISet<string>? excludedProps)
     {
       var props = typeof(T).GetProperties();//danh sách thuộc tính

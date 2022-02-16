@@ -8,6 +8,7 @@ import { DateFormat } from "./formatter";
 
 /**
  * @type {validator}
+ * @author Createdby: nvchung (16/02/2022)
  */
 const isRequired = (msg) => {
 	return (val) => {
@@ -17,8 +18,9 @@ const isRequired = (msg) => {
 };
 /**
  * @type {validator}
+ * @author Createdby: nvchung (16/02/2022)
  */
-const isEmail = (msg = "Email không hợp lệ") => {
+const isEmail = (msg) => {
 	return (val) => {
 		if (!val) return true;
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) ? true : msg;
@@ -26,16 +28,8 @@ const isEmail = (msg = "Email không hợp lệ") => {
 };
 /**
  * @type {validator}
- */
-const isPhoneNumber = (msg) => {
-	return (val) => {
-		if (!val) return true;
-		return /^\d{10,12}$/.test(val) ? true : msg;
-	};
-};
-/**
- * @type {validator}
  * @param {Date} cmpVal - Date so sánh
+ * @author Createdby: nvchung (16/02/2022)
  */
 const isDateLessThan = (msg, cmpVal) => {
 	return (val) => {
@@ -43,13 +37,4 @@ const isDateLessThan = (msg, cmpVal) => {
 		return dayjs(val, DateFormat.DMY).isBefore(cmpVal) ? true : msg;
 	};
 };
-/**
- * @type {validator}
- */
-const isNumber = (msg) => {
-	return (val) => {
-		if (!val) return true;
-		return /^\d+$/.test(val) ? true : msg;
-	};
-};
-export { isRequired, isEmail, isPhoneNumber, isDateLessThan, isNumber };
+export { isRequired, isEmail, isDateLessThan };

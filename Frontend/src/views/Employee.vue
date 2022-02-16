@@ -22,7 +22,12 @@
 					</m-list>
 				</m-dropdown>
 				<div class="flex items-center gap-10">
-					<m-input v-model="searchText" placeholder="Tìm theo mã, tên nhân viên" icon="search" />
+					<m-input
+						@keydown.enter="handleSearch"
+						v-model="searchText"
+						placeholder="Tìm theo mã, tên nhân viên"
+						icon="search"
+					/>
 					<m-icon v-tooltip="'Lấy lại dữ liệu'" icon="refresh" @click="handleResetData" />
 					<m-icon v-tooltip="'Xuất ra excel'" icon="excel" @click="handleExportExcel" />
 					<m-icon
@@ -135,6 +140,12 @@ import MPopup from "../components/bases/MPopup.vue";
 import ApiConfig from "../api-config";
 import useMessageDialog from "../composables/useMessageDialog";
 import useToastMessage from "../composables/useToastMessage";
+import text from "../common/text";
+import formatter from "../utils/formatter";
+
+/**
+ * @author Createdby: nvchung (16/02/2022)
+ */
 export default {
 	components: {
 		Layout,
@@ -166,64 +177,61 @@ export default {
 		 * @type {Array.<header>} EMPLOYEE_HEADERS
 		 */
 		const EMPLOYEE_HEADERS = [
-			{ text: "Mã nhân viên", propName: "EmployeeCode", width: 120 },
-			{ text: "Tên nhân viên", propName: "FullName", width: 174 },
+			{ text: text.EMP_CODE, propName: "EmployeeCode", width: 120 },
+			{ text: text.EMP_FULLNAME, propName: "FullName", width: 174 },
 			{
-				text: "Giới tính",
+				text: text.GENDER,
 				propName: "Gender",
 				width: 90,
 				format: "gender",
 			},
 			{
-				text: "Ngày sinh",
+				text: text.DATE_OF_BIRTH,
 				propName: "DateOfBirth",
 				format: "date",
 				width: 110,
 			},
-			{ text: "Chức danh", propName: "EmployeePosition", width: 150 },
+			{ text: text.POSITION, propName: "EmployeePosition", width: 150 },
 			{ text: "Số CMND", propName: "IdentityNumber", width: 150 },
 			{
-				text: "Ngày cấp",
+				text: text.INDENTITY_DATE,
 				propName: "IdentityDate",
 				width: 110,
 				format: "date",
 			},
-			{ text: "Nơi cấp", propName: "IdentityPlace", width: 140 },
-			{ text: "Số tài khoản", propName: "BankAccountNumber", width: 150 },
-			{ text: "Tên ngân hàng", propName: "BankName", width: 200 },
+			{ text: text.IDENTITY_PLACE, propName: "IdentityPlace", width: 140 },
+			{ text: text.BANK_ACC_NUMBER, propName: "BankAccountNumber", width: 150 },
+			{ text: text.BANK_NAME, propName: "BankName", width: 200 },
 			{
-				text: "Chi nhánh TK ngân hàng",
+				text: text.BANK_BRANCH_NAME,
 				propName: "BankBranchName",
 				width: 200,
 			},
-			{ text: "Địa chỉ", propName: "Address", width: 200 },
-			{ text: "ĐT di động", propName: "PhoneNumber", width: 150 },
-			{ text: "ĐT cố định", propName: "TelephoneNumber", width: 150 },
-			{ text: "Email", propName: "Email", width: 200 },
-			{ text: "Mã đơn vị", propName: "DepartmentCode", width: 150 },
-			{ text: "Tên đơn vị", propName: "DepartmentName", width: 200 },
-			{ text: "Ngày tạo", propName: "CreatedDate", format: "date", width: 150 },
-			{ text: "Người tạo", propName: "CreatedBy", width: 150 },
+			{ text: text.ADDRESS, propName: "Address", width: 200 },
+			{ text: text.PHONE_NUMBER, propName: "PhoneNumber", width: 150 },
+			{ text: text.TELEPHONE_NUMBER, propName: "TelephoneNumber", width: 150 },
+			{ text: text.EMAIL, propName: "Email", width: 200 },
+			{ text: text.DPM_CODE, propName: "DepartmentCode", width: 150 },
+			{ text: text.DPM_NAME, propName: "DepartmentName", width: 200 },
+			{ text: text.CREATED_DATE, propName: "CreatedDate", format: "date", width: 150 },
+			{ text: text.CREATED_BY, propName: "CreatedBy", width: 150 },
 			{
-				text: "Ngày sửa",
+				text: text.MODIFIED_DATE,
 				propName: "ModifiedDate",
 				format: "date",
 				width: 150,
 			},
-			{ text: "Người sửa", propName: "ModifiedBy", width: 150 },
+			{ text: text.MODIFIED_BY, propName: "ModifiedBy", width: 150 },
 		];
 		//Header của bảng tùy chỉnh giao diện
-		const CUSTOMIZER_TABLE_HEADERS = [{ text: "Tên cột dữ liệu", propName: "text" }];
+		const CUSTOMIZER_TABLE_HEADERS = [{ text: text.COL_NAME, propName: "text" }];
 		//Header mặc định của bảng nhân viên
 		const DEFAULT_EMPLOYEE_HEADERS = EMPLOYEE_HEADERS.slice(0, 8);
 		//Các lựa chọn của combobox số bản ghi/trang
-		const PERPAGE_OPTIONS = [
-			{ text: "10 bản ghi trên 1 trang", value: 10 },
-			{ text: "20 bản ghi trên 1 trang", value: 20 },
-			{ text: "30 bản ghi trên 1 trang", value: 30 },
-			{ text: "50 bản ghi trên 1 trang", value: 50 },
-			{ text: "100 bản ghi trên 1 trang", value: 100 },
-		];
+		const PERPAGE_OPTIONS = [10, 20, 30, 50, 100].map((value) => ({
+			text: formatter.formatString(text.ITEMS_PER_PAGE, value),
+			value,
+		}));
 		return {
 			EMPLOYEE_HEADERS,
 			CUSTOMIZER_TABLE_HEADERS,
@@ -238,7 +246,16 @@ export default {
 	},
 	methods: {
 		/**
+		 * Tìm kiếm nhân viên
+		 * @author Createdby: nvchung (16/02/2022)
+		 */
+		handleSearch() {
+			this.page = 1;
+			this.loadEmployees();
+		},
+		/**
 		 * Thêm mới nhân viên
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handleAdd() {
 			this.currentEmployeeId = undefined;
@@ -247,17 +264,18 @@ export default {
 		},
 		/**
 		 * Xóa nhiều nhân viên
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handleBulkDelete() {
 			this.showConfirm({
-				text: `Bạn có thực sự muốn xóa ${this.selectedEmployeeIds.length} nhân viên đã chọn không?`,
+				text: this.$formatters.formatString(text.BULK_DEL_EMP_CON, this.selectedEmployeeIds.length),
 				icon: "warning",
 				onYes: async () => {
 					this.appLoading = true;
 					try {
 						const resp = await this.$axios.post(ApiConfig.Employee.BULK, this.selectedEmployeeIds);
 						this.selectedEmployeeIds = [];
-						this.makeToast(`${resp.data} bản ghi đã bị xóa`);
+						this.makeToast(this.$formatters.formatString(text.BULK_DEL_EMP_SUC, resp.data));
 						await this.loadEmployees();
 					} catch {
 						this.showUnknowError();
@@ -269,12 +287,14 @@ export default {
 		},
 		/**
 		 * Export file excel
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handleExportExcel() {
 			window.open(ApiConfig.Employee.EXCEL_FILE);
 		},
 		/**
 		 * Hiện dropdown xóa nhiều
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handleOpenBulkActions(evt) {
 			if (this.selectedEmployeeIds.length == 0) {
@@ -283,14 +303,17 @@ export default {
 		},
 		/**
 		 * Refresh data
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handleResetData() {
 			this.searchText = "";
 			this.page = 1;
 			this.perPage = this.PERPAGE_OPTIONS[0];
+			this.loadEmployees();
 		},
 		/**
 		 * Reset tùy chỉnh giao diện về mặc định
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handleResetCustomizer() {
 			this.selectedEmployeePropNames = this.DEFAULT_EMPLOYEE_HEADERS.map(
@@ -299,6 +322,7 @@ export default {
 		},
 		/**
 		 * Lưu lại tùy chỉnh giao diện
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handleSaveCustomizer() {
 			this.selectedEmployeeHeaders = this.EMPLOYEE_HEADERS.filter(({ propName }) =>
@@ -309,24 +333,28 @@ export default {
 		/**
 		 * Đóng popup thông tin nhân viên
 		 * @param {Number} status - Trạng thái trả về từ popup thông tin nhân viên
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handlePopupClose(status) {
 			this.showPopup = false;
 			if (status == 1) {
 				switch (this.popupMode) {
 					case "edit":
-						this.makeToast("Dữ liệu đã được cập nhật");
+						this.makeToast(text.UPDATE_SUC);
 						break;
 					case "add":
-						this.makeToast("Thêm mới thành công");
+						this.makeToast(text.ADD_SUC);
 						break;
 					case "clone":
-						this.makeToast("Nhân bản thành công");
+						this.makeToast(text.CLONE_SUC);
 				}
 				this.loadEmployees();
 			}
 		},
-		//Cất và thêm
+		/**
+		 * Cất và thêm
+		 * @author Createdby: nvchung (16/02/2022)
+		 */
 		handleSaveAndAdd() {
 			this.currentEmployeeId = undefined;
 			this.popupMode = "add";
@@ -335,6 +363,7 @@ export default {
 		/**
 		 * @param {String} search - search keyword
 		 * Load nhân viên với phân trang và tìm kiếm
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		async loadEmployees() {
 			this.appLoading = true;
@@ -357,6 +386,7 @@ export default {
 		},
 		/**
 		 * Sửa nhân viên
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		editEmp(empId) {
 			this.popupMode = "edit";
@@ -365,6 +395,7 @@ export default {
 		},
 		/**
 		 * Nhân bản nhân viên
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		clone(empId) {
 			this.popupMode = "clone";
@@ -373,16 +404,17 @@ export default {
 		},
 		/**
 		 * Xóa nhân viên
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		async delEmp(emp) {
 			this.showConfirm({
-				text: `Bạn có thực sự muốn xóa nhân viên ${emp.EmployeeCode} không?`,
+				text: this.$formatters.formatString(text.DEL_EMP_CON, emp.EmployeeCode),
 				icon: "warning",
 				onYes: async () => {
 					this.appLoading = true;
 					try {
 						await this.$axios.delete(`${ApiConfig.Employee.BASE}/${emp.EmployeeId}`);
-						this.makeToast("Bản ghi đã bị xóa");
+						this.makeToast(text.DEL_SUC);
 						this.loadEmployees();
 					} catch {
 						this.showUnknowError();
@@ -394,6 +426,7 @@ export default {
 		},
 		/**
 		 * Xử lý sự kiện số bản ghi/trang thay đổi
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handlePerPageChange(perPage) {
 			this.perPage = perPage;
@@ -404,10 +437,11 @@ export default {
 		},
 		/**
 		 * Hiện lỗi server
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		showUnknowError() {
 			this.showError({
-				text: "Có lỗi xảy ra. Vui lòng liên hệ Misa để được hỗ trợ.",
+				text: text.UNKNOWN_ERR,
 			});
 		},
 	},
@@ -431,14 +465,8 @@ export default {
 	},
 	watch: {
 		/**
-		 * Cập nhật lại số trang và load lại dữ liệu khi tìm kiếm thay đổi
-		 */
-		searchText() {
-			this.page = 1;
-			this.loadEmployees();
-		},
-		/**
 		 * Load lại nhân viên nếu số trang thay đổi
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		page() {
 			this.loadEmployees();

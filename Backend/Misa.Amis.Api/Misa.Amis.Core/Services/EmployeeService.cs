@@ -25,6 +25,7 @@ namespace Misa.Amis.Core.Services
     #endregion
 
     #region Methods
+    //Created by: nvchung (11/02/2022)
     protected override void Validate(Employee entity, bool isUpdate)
     {
       //Ngày sinh không được lớn hơn ngày hiện tại

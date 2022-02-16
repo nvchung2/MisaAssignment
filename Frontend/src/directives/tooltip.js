@@ -1,6 +1,7 @@
 import tippy from "tippy.js";
 /**
  * @type {import("vue").Directive}
+ * @author Createdby: nvchung (16/02/2022)
  */
 const Tooltip = {
 	mounted(el, { value }) {

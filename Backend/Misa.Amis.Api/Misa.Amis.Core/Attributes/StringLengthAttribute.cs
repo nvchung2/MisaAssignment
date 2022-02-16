@@ -25,12 +25,12 @@
     #endregion
 
     #region Methods
-
+    /// Created by: nvchung (11/02/2022)
     public override string FormatErrorMessage(string displayName)
     {
       return string.Format(ErrorMessageFormat, displayName, MaxLength);
     }
-
+    /// Created by: nvchung (11/02/2022)
     public override bool IsValid(object? value)
     {
       if (value == null || value is not string val)

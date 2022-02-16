@@ -27,6 +27,7 @@ namespace Misa.Amis.Api.Controllers
     /// <param name="pageNumber">Số trang</param>
     /// <param name="search">Từ khóa</param>
     /// <returns></returns>
+    /// Created by: nvchung (11/02/2022)
     [HttpGet("Filter")]
     public IActionResult GetPaged(int pageSize = 10, int pageNumber = 0, string? search = null)
     {
@@ -36,6 +37,7 @@ namespace Misa.Amis.Api.Controllers
     /// Lấy mã nhân viên mới tự động
     /// </summary>
     /// <returns></returns>
+    /// Created by: nvchung (11/02/2022)
     [HttpGet("NextCode")]
     public IActionResult GetNextCode()
     {
@@ -46,6 +48,7 @@ namespace Misa.Amis.Api.Controllers
     /// </summary>
     /// <param name="ids">Danh sách khóa chính</param>
     /// <returns>Số bản ghi bị xóa</returns>
+    /// Created by: nvchung (11/02/2022)
     [HttpPost("BulkDelete")]
     public IActionResult BulkDelete(IEnumerable<Guid> ids)
     {
@@ -55,6 +58,7 @@ namespace Misa.Amis.Api.Controllers
     /// Export dữ liệu dạng excel
     /// </summary>
     /// <returns>File excel</returns>
+    /// Created by: nvchung (11/02/2022)
     [HttpGet("ExcelFile")]
     public IActionResult GetExcelFile()
     {

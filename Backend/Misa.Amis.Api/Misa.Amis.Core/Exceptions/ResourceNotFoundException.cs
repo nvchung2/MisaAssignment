@@ -3,6 +3,7 @@
   /// <summary>
   /// Exception không tìm thấy resource
   /// </summary>
+  /// Created by: nvchung (11/02/2022)
   public class ResourceNotFoundException : Exception
   {
     /// <summary>

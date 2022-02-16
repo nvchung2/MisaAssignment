@@ -63,6 +63,7 @@ namespace Misa.Amis.Infrastructure.Repositories
     /// <param name="condition">Điều kiện tìm kiếm</param>
     /// <param name="conditionParams">Parameters của điều kiện tìm kiếm</param>
     /// <returns></returns>
+    /// Created by: nvchung (11/02/2022)
     protected Page<T> GetPaged(int pageSize, int pageNumber, string? condition = null, DynamicParameters? conditionParams = null)
     {
       var sql = $"create temporary table filteredTable select * from View_{TableName}{(condition != null ? $" where {condition}" : string.Empty)} order by CreatedDate desc; select * from filteredTable limit @take offset @skip; select count(*) from filteredTable; drop temporary table filteredTable;";//lệnh truy vấn tìm kiếm và phân trang
@@ -80,33 +81,35 @@ namespace Misa.Amis.Infrastructure.Repositories
       var totalRecords = res.Read<int>().First();//tổng số bản ghi
       return new Page<T>((int)Math.Ceiling(totalRecords / (double)take), totalRecords, data);
     }
+    //Created by: nvchung (11/02/2022)
     public virtual int Delete(Guid id)
     {
       var sql = $"delete from {TableName} where {TableName}Id=@id";
       using var db = GetConnection();
       return db.Execute(sql, new { id });
     }
-
+    //Created by: nvchung (11/02/2022)
     public virtual IEnumerable<T> GetAll()
     {
       var sql = $"select * from View_{TableName}";
       using var db = GetConnection();
       return db.Query<T>(sql);
     }
-
+    //Created by: nvchung (11/02/2022)
     public virtual T GetByCode(string code)
     {
       var sql = $"select * from {TableName} where {TableName}Code=@code";
       using var db = GetConnection();
       return db.QueryFirstOrDefault<T>(sql, new { code });
     }
-
+    //Created by: nvchung (11/02/2022)
     public virtual T GetById(Guid id)
     {
       var sql = $"select * from View_{TableName} where {TableName}Id=@id";
       using var db = GetConnection();
       return db.QueryFirstOrDefault<T>(sql, new { id });
     }
+    //Created by: nvchung (11/02/2022)
     public virtual int Insert(T entity)
     {
       //set giá trị cho khóa chính, CreatedDate, ModifiedDate
@@ -120,7 +123,7 @@ namespace Misa.Amis.Infrastructure.Repositories
       using var db = GetConnection();
       return db.Execute(sql, BuildDynamicParameters(entity));
     }
-
+    ///Created by: nvchung (11/02/2022)
     public virtual int Update(Guid id, T entity)
     {
       //set giá trị ModifiedDate

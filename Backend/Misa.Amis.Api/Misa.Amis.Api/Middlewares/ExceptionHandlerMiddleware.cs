@@ -30,6 +30,7 @@ namespace Misa.Amis.Api.Middlewares
     /// </summary>
     /// <param name="http"></param>
     /// <returns></returns>
+    /// Created by: nvchung (11/02/2022)
     public async Task InvokeAsync(HttpContext http)
     {
       try

@@ -1,28 +1,31 @@
 <template>
-  <side-bar :mini="sideBarMini" :onToggleSideBar="toggleSideBar" />
-  <top-header :sideBarMini="sideBarMini" :onToggleSideBar="toggleSideBar" />
-  <main :class="['main', sideBarMini && 'main--sidebar-mini']">
-    <slot />
-  </main>
+	<side-bar :mini="sideBarMini" :onToggleSideBar="toggleSideBar" />
+	<top-header :sideBarMini="sideBarMini" :onToggleSideBar="toggleSideBar" />
+	<main :class="['main', sideBarMini && 'main--sidebar-mini']">
+		<slot />
+	</main>
 </template>
 <script>
 import SideBar from "./SideBar.vue";
 import TopHeader from "./TopHeader.vue";
+/**
+ * @author Createdby: nvchung (16/02/2022)
+ */
 export default {
-  components: {
-    SideBar,
-    TopHeader,
-  },
-  data() {
-    return {
-      sideBarMini: false,
-    };
-  },
-  methods: {
-    toggleSideBar() {
-      this.sideBarMini = !this.sideBarMini;
-    },
-  },
+	components: {
+		SideBar,
+		TopHeader,
+	},
+	data() {
+		return {
+			sideBarMini: false,
+		};
+	},
+	methods: {
+		toggleSideBar() {
+			this.sideBarMini = !this.sideBarMini;
+		},
+	},
 };
 </script>
 <style>

@@ -40,6 +40,9 @@
 </template>
 <script>
 import MCheckBox from "./MCheckBox.vue";
+/**
+ * @author Createdby: nvchung (16/02/2022)
+ */
 export default {
 	components: {
 		MCheckBox,

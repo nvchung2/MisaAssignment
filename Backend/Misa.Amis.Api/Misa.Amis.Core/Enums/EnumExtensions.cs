@@ -13,6 +13,7 @@ namespace Misa.Amis.Core.Enums
     /// </summary>
     /// <param name="val"></param>
     /// <returns></returns>
+    /// Created by: nvchung (11/02/2022)
     public static string GetDisplayName(this Enum val)
     {
       var f = val.GetType().GetField(val.ToString());

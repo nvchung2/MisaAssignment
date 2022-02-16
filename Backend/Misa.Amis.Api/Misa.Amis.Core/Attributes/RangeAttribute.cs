@@ -26,7 +26,7 @@
     {
       return string.Format(ErrorMessageFormat, displayName, Min, Max);
     }
-
+    /// Created by: nvchung (11/02/2022)
     public override bool IsValid(object? value)
     {
       if (value is not IComparable valueIC) return true;

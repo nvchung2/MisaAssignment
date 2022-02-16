@@ -16,6 +16,7 @@ namespace Misa.Amis.Core.Utils
     /// <typeparam name="T">Entity type</typeparam>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
+    /// Created by: nvchung (11/02/2022)
     public static string GetTableName<T>() where T : BaseEntity
     {
       var type = typeof(T);
@@ -31,6 +32,7 @@ namespace Misa.Amis.Core.Utils
     /// <typeparam name="T">Entity type</typeparam>
     /// <param name="includePrimaryKey">Có bao gồm khóa chính không?</param>
     /// <returns></returns>
+    /// Created by: nvchung (11/02/2022)
     public static IEnumerable<string> GetColumnNames<T>(bool includePrimaryKey = true) where T : BaseEntity
     {
       return typeof(T).GetProperties().Where(p => p.IsDefined(typeof(ColumnAttribute)) || (includePrimaryKey && p.IsDefined(typeof(PrimaryKeyAttribute)))).Select(p => p.Name);
@@ -40,6 +42,7 @@ namespace Misa.Amis.Core.Utils
     /// </summary>
     /// <typeparam name="T">Entity type</typeparam>
     /// <returns></returns>
+    /// Created by: nvchung (11/02/2022)
     public static PropertyInfo GetPrimaryKeyProperty<T>() where T : BaseEntity
     {
       return typeof(T).GetProperties().First(p => p.IsDefined(typeof(PrimaryKeyAttribute)));
@@ -49,6 +52,7 @@ namespace Misa.Amis.Core.Utils
     /// </summary>
     /// <param name="member">Property/Class</param>
     /// <returns></returns>
+    /// Created by: nvchung (11/02/2022)
     public static string GetDisplayName(MemberInfo member)
     {
       var dpNameAttr = member.GetCustomAttribute<DisplayNameAttribute>();

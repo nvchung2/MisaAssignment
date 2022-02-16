@@ -26,6 +26,9 @@
 <script>
 import MButton from "./MButton.vue";
 import MIcon from "./MIcon.vue";
+/**
+ * @author Createdby: nvchung (16/02/2022)
+ */
 export default {
 	components: { MButton, MIcon },
 	props: {

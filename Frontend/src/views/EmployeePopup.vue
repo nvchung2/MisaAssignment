@@ -92,8 +92,6 @@
 								<m-input
 									v-model="employee.IdentityNumber"
 									name="IdentityNumber"
-									:error="getInputError('IdentityNumber')"
-									@blur="handleBlur"
 									@input="handleInput"
 									maxlength="20"
 								/>
@@ -129,10 +127,8 @@
 						<m-input
 							v-model="employee.PhoneNumber"
 							name="PhoneNumber"
-							:error="getInputError('PhoneNumber')"
-							@blur="handleBlur"
 							@input="handleInput"
-							maxlength="12"
+							maxlength="30"
 						/>
 					</m-field>
 				</m-col>
@@ -141,10 +137,8 @@
 						<m-input
 							v-model="employee.TelephoneNumber"
 							name="TelephoneNumber"
-							:error="getInputError('TelephoneNumber')"
-							@blur="handleBlur"
 							@input="handleInput"
-							maxlength="12"
+							maxlength="30"
 						/>
 					</m-field>
 				</m-col>
@@ -166,8 +160,6 @@
 						<m-input
 							v-model="employee.BankAccountNumber"
 							name="BankAccountNumber"
-							:error="getInputError('BankAccountNumber')"
-							@blur="handleBlur"
 							@input="handleInput"
 							maxlength="50"
 						/>
@@ -219,8 +211,13 @@ import MMessageDialog from "../components/bases/MMessageDialog.vue";
 import ApiConfig from "../api-config";
 import useForm from "../composables/useForm";
 import useMessageDialog from "../composables/useMessageDialog";
-import { isDateLessThan, isEmail, isNumber, isPhoneNumber, isRequired } from "../utils/validators";
-import { DateFormat } from "../utils/formatter";
+import { isDateLessThan, isEmail, isRequired } from "../utils/validators";
+import formatter, { DateFormat } from "../utils/formatter";
+import text from "../common/text";
+
+/**
+ * @author Createdby: nvchung (16/02/2022)
+ */
 export default {
 	components: {
 		MPopup,
@@ -252,43 +249,63 @@ export default {
 			default: "add",
 		},
 	},
+	/**
+	 * @author Createdby: nvchung (16/02/2022)
+	 */
 	setup() {
 		//rule validate đơn vị
 		const validateDepartment = (dpmId, emp) => {
 			if (dpmId) return true;
-			return emp.DepartmentName ? "Đơn vị không có trong danh sách" : "Không được để trống đơn vị";
+			return emp.DepartmentName
+				? text.DPM_NOT_EXIST_ERR
+				: formatter.formatString(text.REQUIRED_ERR, text.DPM);
 		};
 		//rule validate mã nhân viên
 		const validateEmployeeCode = (code) => {
-			return /^NV-\d{1,22}$/.test(code) ? true : "Mã nhân viên phải theo định dạng NV-X (X là số)";
+			return /^NV-\d{1,22}$/.test(code) ? true : text.EMP_CODE_INVALID_ERR;
 		};
 		//set up form hook
 		const { values: employee, ...rest } = useForm({
-			EmployeeCode: [isRequired("Không được để trống mã nhân viên"), validateEmployeeCode],
-			FullName: [isRequired("Không được để trống họ tên nhân viên")],
+			EmployeeCode: [
+				isRequired(formatter.formatString(text.REQUIRED_ERR, text.EMP_CODE)),
+				validateEmployeeCode,
+			],
+			FullName: [isRequired(formatter.formatString(text.REQUIRED_ERR, text.EMP_FULLNAME))],
 			DepartmentId: [validateDepartment],
-			DateOfBirth: [isDateLessThan("Ngày sinh không được lớn hơn ngày hiện tại", new Date())],
-			Email: [isEmail()],
-			PhoneNumber: [isPhoneNumber("Số điện thoại di động không hợp lệ")],
-			TelephoneNumber: [isPhoneNumber("Số điện thoại cố định không hợp lệ")],
-			IdentityDate: [isDateLessThan("Ngày cấp không được lớn hơn ngày hiện tại", new Date())],
-			IdentityNumber: [isNumber("Số CMND phải là các chữ số")],
-			BankAccountNumber: [isNumber("Số tài khoản phải là các chữ số")],
+			DateOfBirth: [
+				isDateLessThan(
+					formatter.formatString(text.DATE_GREATER_THAN_TODAY_ERR, text.DATE_OF_BIRTH),
+					new Date()
+				),
+			],
+			Email: [isEmail(text.EMAIL_ERR)],
+			IdentityDate: [
+				isDateLessThan(
+					formatter.formatString(text.DATE_GREATER_THAN_TODAY_ERR, text.INDENTITY_DATE),
+					new Date()
+				),
+			],
 		});
 		return { employee, ...rest, ...useMessageDialog() };
 	},
+	/**
+	 * @author Createdby: nvchung (16/02/2022)
+	 */
 	data() {
 		return {
 			departments: undefined, //danh sách đơn vị
 			departmentHeaders: [
-				{ text: "Mã đơn vị", value: "DepartmentCode" },
-				{ text: "Tên đơn vị", value: "DepartmentName" },
+				{ text: text.DPM_CODE, value: "DepartmentCode" },
+				{ text: text.DPM_NAME, value: "DepartmentName" },
 			], //header của table trong combobox đơn vị
 			departmentLoading: false, //combobox loading
 			popupLoading: false, //hiện spinner
 		};
 	},
 	inheritAttrs: false,
+	/**
+	 * @author Createdby: nvchung (16/02/2022)
+	 */
 	created() {
 		switch (this.mode) {
 			case "add": //lấy code mới nếu là form add
@@ -301,10 +318,16 @@ export default {
 				this.loadEmployee().then(() => this.getNewEmployeeCode());
 		}
 	},
+	/**
+	 * @author Createdby: nvchung (16/02/2022)
+	 */
 	mounted() {
 		//bind event phím tắt
 		document.addEventListener("keydown", this.handleShortKey);
 	},
+	/**
+	 * @author Createdby: nvchung (16/02/2022)
+	 */
 	unmounted() {
 		//remove event phím tắt
 		document.removeEventListener("keydown", this.handleShortKey);
@@ -313,6 +336,7 @@ export default {
 		/**
 		 * Xử lý sự kiện phím tắt trên form
 		 * @param {KeyboardEvent} evt
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handleShortKey(evt) {
 			if (evt.key == "Escape") {
@@ -329,11 +353,12 @@ export default {
 		},
 		/**
 		 * Đóng form
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		closeForm() {
 			if (this.isFormChanged) {
 				this.showConfirm({
-					text: "Dữ liệu đã bị thay đổi. Bạn có muốn cất không?",
+					text: text.FORM_CHANGE_WARN,
 					icon: "question",
 					showCancel: true,
 					onYes: () => this.handleSave(),
@@ -343,7 +368,10 @@ export default {
 				this.$emit("close");
 			}
 		},
-		//Lấy mã nhân viên mới
+		/**
+		 * Lấy mã nhân viên mới
+		 * @author Createdby: nvchung (16/02/2022)
+		 */
 		async getNewEmployeeCode() {
 			try {
 				const { data: code } = await this.$axios.get(ApiConfig.Employee.NEXT_CODE);
@@ -354,6 +382,7 @@ export default {
 		},
 		/**
 		 * Hàm lọc của combobox đơn vị
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		departmentFilter(department, search) {
 			const reg = new RegExp(search, "i");
@@ -361,6 +390,7 @@ export default {
 		},
 		/**
 		 * Load dữ liệu lên combobox đơn vị
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		loadDepartments() {
 			if (this.departments || this.departmentLoading) return;
@@ -374,13 +404,17 @@ export default {
 					this.departmentLoading = false;
 				});
 		},
-		//Chọn một đơn vị từ combobox
+		/**
+		 * Chọn một đơn vị từ combobox
+		 * @author Createdby: nvchung (16/02/2022)
+		 */
 		handleDepartmentSelect(department) {
 			this.employee.DepartmentId = department?.DepartmentId;
 			this.errors.DepartmentId = null;
 		},
 		/**
 		 * Load nhân viên lên form
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		async loadEmployee() {
 			this.popupLoading = true;
@@ -400,6 +434,7 @@ export default {
 		},
 		/**
 		 * Lấy key của lỗi đầu tiên
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		getFirstErrorKey() {
 			return Object.keys(this.errors).find((k) => this.errors[k]);
@@ -407,6 +442,7 @@ export default {
 		/**
 		 * Lưu nhân viên
 		 * @param {Boolean} preventClose - ngăn đóng form sau khi lưu dữ liệu
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		async handleSave(preventClose = false) {
 			//validate dữ liệu
@@ -456,6 +492,7 @@ export default {
 		},
 		/**
 		 * Cất và thêm
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		async handleSaveAndAdd() {
 			await this.handleSave(true);
@@ -465,13 +502,14 @@ export default {
 		},
 		/**
 		 * Xử lý lỗi khi request với axios
+		 * @author Createdby: nvchung (16/02/2022)
 		 */
 		handleAxiosError(err) {
 			console.log(err.response);
 			let userMsg = err.response?.data?.userMessage;
 			const errProp = err.response?.data?.data?.ErrorProperty;
 			if (!userMsg) {
-				userMsg = "Có lỗi xảy ra. Vui lòng liên hệ Misa để được hỗ trợ.";
+				userMsg = text.UNKNOWN_ERR;
 			}
 			this.showError({
 				text: userMsg,

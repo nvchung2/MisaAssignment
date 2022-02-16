@@ -1,7 +1,6 @@
 ﻿using Misa.Amis.Core.Attributes;
 using Misa.Amis.Core.Enums;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Misa.Amis.Core.Entities
 {
@@ -51,14 +50,14 @@ namespace Misa.Amis.Core.Entities
     /// </summary>
     [Column]
     [DisplayName("DPNPhoneNumber")]
-    [PhoneNumber]
+    [StringLength(30)]
     public string? PhoneNumber { get; set; }
     /// <summary>
     /// Số điện thoại cố định
     /// </summary>
     [Column]
     [DisplayName("DPNTelephoneNumber")]
-    [PhoneNumber]
+    [StringLength(30)]
     public string? TelephoneNumber { get; set; }
     /// <summary>
     /// Email
@@ -79,7 +78,6 @@ namespace Misa.Amis.Core.Entities
     /// Số CMND
     /// </summary>
     [Column]
-    [RegularExpression(@"^\d+$", ErrorMessageFormat = "Thông tin {0} phải là các chữ số")]
     [DisplayName("DPNIndetityNumber")]
     [StringLength(20)]
     public string? IdentityNumber { get; set; }
@@ -113,7 +111,6 @@ namespace Misa.Amis.Core.Entities
     /// Số Tk
     /// </summary>
     [Column]
-    [RegularExpression(@"^\d+$", ErrorMessageFormat = "Thông tin {0} phải là các chữ số")]
     [DisplayName("DPNBankAccountNumber")]
     [StringLength(50)]
     public string? BankAccountNumber { get; set; }

@@ -25,7 +25,7 @@ namespace Misa.Amis.Core.Attributes
     #endregion
 
     #region Methods
-
+    /// Created by: nvchung (11/02/2022)
     public override bool IsValid(object? value)
     {
       if (value is string s && !string.IsNullOrEmpty(s))
@@ -34,7 +34,7 @@ namespace Misa.Amis.Core.Attributes
       }
       return true;
     }
-
+    /// Created by: nvchung (11/02/2022)
     public override string FormatErrorMessage(string displayName)
     {
       return string.Format(ErrorMessageFormat, displayName, Pattern);

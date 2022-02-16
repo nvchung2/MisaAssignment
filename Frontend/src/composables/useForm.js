@@ -11,6 +11,7 @@ import { reactive, ref } from "vue";
  * Hook quản lý form state
  * @param {RuleMap} rules
  * @returns {object}
+ * @author Createdby: nvchung (16/02/2022)
  */
 export default function useForm(rules) {
 	let initialErrors = {},
