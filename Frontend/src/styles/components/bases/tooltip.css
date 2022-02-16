@@ -1,0 +1,35 @@
+.tippy-box {
+	padding: 3px 10px;
+	border-radius: 2px;
+	background-color: #505050;
+	color: #fff;
+}
+.tippy-box .tippy-content {
+	font-size: 12px;
+	white-space: nowrap;
+}
+.tippy-box .tippy-arrow {
+	background-color: inherit;
+	visibility: hidden;
+}
+.tippy-box[data-placement^="bottom"] .tippy-arrow {
+	top: -4px;
+}
+.tippy-box[data-placement^="top"] .tippy-arrow {
+	bottom: -4px;
+}
+.tippy-box[data-placement^="left"] .tippy-arrow {
+	right: -4px;
+}
+.tippy-box[data-placement^="right"] .tippy-arrow {
+	left: -4px;
+}
+.tippy-box .tippy-arrow::before {
+	content: "";
+	display: block;
+	width: 8px;
+	height: 8px;
+	background-color: inherit;
+	transform: rotateZ(45deg);
+	visibility: visible;
+}
